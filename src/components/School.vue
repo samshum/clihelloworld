@@ -47,10 +47,12 @@ export default {
     data(){
         return{
             visible: false,
-            activeNames: ['1'],
-            schoolName:  "中国人民大学",
-            schoolAddress:  "广州大学城学院"
+            activeNames: ['1']
         }
+    },
+    props:{
+        schoolName: String,
+        schoolAddress:  String
     },
     methods:{
 

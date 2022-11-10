@@ -4,7 +4,7 @@
     <HelloWorld msg="Welcome to Your Vue.js App"/>
     <hr />
     <Student></Student>
-    <School></School>
+    <School :schoolName="sn" :schoolAddress="sa"></School>
   </div>
 </template>
 
@@ -19,6 +19,12 @@ export default {
     School,
     Student,
     HelloWorld
+  },
+  data(){
+    return {
+      sn : "中国人民大学",
+      sa : "广州大学城学院校区" 
+    }
   }
 }
 </script>
