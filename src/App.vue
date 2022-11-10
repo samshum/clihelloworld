@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <School></School>
-    <Student></Student>
-    <hr />
     <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <hr />
+    <Student></Student>
+    <School></School>
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
