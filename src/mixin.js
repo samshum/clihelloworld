@@ -1,7 +1,12 @@
 export const mixinfun = {
     methods:{
-        showName(){
-            alert(this.name)
+        showMixinMethod(){
+            //alert(this.name)
+            this.$notify({
+                title: this.name,
+                message: '这是一条成功的提示消息',
+                type: 'success'
+            });
         }
     },
     mounted(){

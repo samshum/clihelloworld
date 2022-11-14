@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class=".school">
-            <h2 @click="showName">{{name}}</h2>
+            <h2 @click.once="showMixinMethod">{{name}}</h2>
             <hr />
             <h3>学校/级别： {{schoolName}}/{{schoolLevel}} 地址： {{schoolAddress}}</h3>
             <!-- <student></student> -->
@@ -28,7 +28,7 @@
         </el-collapse>
 
         <el-button @click="getSchoolName('调用父组件传递函数方法[getSchoolName()], '+name)">调用父组件传递函数方法</el-button>
-
+        <el-button @click="callStudentGlobalEventBus">调用全局事件总线完成平行组件数据传递</el-button>
     </div>
 </template>
 
@@ -66,7 +66,9 @@ export default {
     //     }
     // },
     methods:{
-
+        callStudentGlobalEventBus(){
+            this.$bus.$emit('globalEventBus', this.schoolName)
+        }
     }, 
     components:{
         //student

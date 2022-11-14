@@ -5,7 +5,7 @@
                 姓名： {{p.name}} / 年龄： {{p.age}}
             </li>
         </ul> -->
-        <h3 @click="showName">{{name}}</h3>
+        <h3 @click.once="showMixinMethod">{{globalEventBusName}} {{name}}</h3>
         <el-table :data="students" style="width: 100%">
             <el-table-column prop="id" label="ID" width="80"></el-table-column>
             <el-table-column prop="name" label="姓名" width="180"></el-table-column>
@@ -13,9 +13,14 @@
             <el-table-column prop="address" label="地址"></el-table-column>
         </el-table>
         
+        <hr />
+        <el-button @click="thiscustomEvents" :disabled="isUnBind">Custom Event</el-button>
+        <el-button @click="thiscustomEventsRef" :disabled="isUnBind">Custom Event Ref</el-button>
+        <el-button @click="thiscustomEventsUnbind">Unbind Events</el-button>
+        <el-button @click="thisDestroyCompoent">Destroy Component</el-button>
+
+        <hr />
         <el-button @click="showmsg" :disabled="isDisabled">Show msg</el-button>
-        <el-button @click="thiscustomEvents">Custom Event</el-button>
-        <el-button @click="thiscustomEventsRef">Custom Event Ref</el-button>
         <el-button @click="globalPluginsSyHello">Global Plugins</el-button>
 
         <hr />
@@ -42,7 +47,9 @@ export default {
     data() {
         return {
             name: "学生信息", 
+            globalEventBusName : "",
             isDisabled: false,
+            isUnBind: false,
             students: [
                 { "id": 0, "name": "AAA", "age": 12, "address": "佛山" },
                 { "id": 1, "name": "BBB", "age": 13, "address": "广州" },
@@ -79,10 +86,36 @@ export default {
         thiscustomEventsRef(){
             this.$emit(
                 'customEventsRef', 
-                '调用自定义事件函数, 在父组件中设置 ref="customEventsRef". ',
+                '调用自定义事件函数, 在父组件中设置 ref="customEventsRef". \n处理事件绑定前可以执行的相关操作 ',
                 this.name,
-                999999999)
+                999999999,
+                '...aaa',
+                '...bbb',
+                '...ccc')
+        },
+        thiscustomEventsUnbind(){
+            // 取消自定义绑定事件
+            // this.$off('customEvents')
+            // this.$off(['customEvents', 'customEventsRef'])
+            // this.$off() //解绑所有自定义事件
+            this.$off(['customEvents', 'customEventsRef'])
+            this.isUnBind = true
+            this.$message('Student自定义事件已取消绑定!')
+        },
+        thisDestroyCompoent(){
+            // 销毁当前组件的实例后，其实例所有的自定义事件都将失效
+            this.$destroy()
+            this.$message('Student组件已销毁!')
         }
+    },
+    mounted(){
+        this.$bus.$on('globalEventBus', (data)=>{
+            this.globalEventBusName = data
+            console.log('@globalEventBus', this, data)
+        })
+    },
+    beforeDestroy(){
+        this.$bus.$off('globalEventBus')
     }
 }
 
