@@ -32,6 +32,5 @@ a {
 }
 .hello{
   text-align: center;
-  background-color: aliceblue;
 }
 </style>
