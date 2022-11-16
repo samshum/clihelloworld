@@ -1,29 +1,45 @@
 <template>
     <div class="student">
+
+        <h3>消息的发布与订阅</h3>
+        <hr />
+        <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+            // 消息订阅与发布(pubsub-js) <br />
+            // 1. 先安装消息插件 npm i pubsub-js <br />
+            // 2. 引入 pubsub 库 import pubsub from 'pubsub-js' <br />
+            // 3. 接收方订阅消息  <br />
+            //      mounted(){this.pubid = pubsub.subscribe('消息名称', 消息接收回调函数 function(){})} <br />
+            //      pubsub.unsubscribe(this.pubid) <br />
+            // 4. 发布消息 pubsub.publish('消息名称', 数据) <br />
+        </el-dialog>
+        <el-button slot="reference" @click="thisPublishMessage">发布消息('student')到School，同时推送学生对象到列表</el-button>
+      
+ 
         <!-- <ul>
             <li v-for="p in students" :key="p.id">
                 姓名： {{p.name}} / 年龄： {{p.age}}
             </li>
         </ul> -->
         <h3 @click.once="showMixinMethod">{{globalEventBusName}} {{name}}</h3>
+        <hr />
         <el-table :data="students" style="width: 100%">
-            <el-table-column prop="id" label="ID" width="80"></el-table-column>
+            <el-table-column label="SID" width="50" type="index"></el-table-column>
+            <el-table-column prop="id" label="编号" width="80" sortable></el-table-column>
             <el-table-column prop="name" label="姓名" width="180"></el-table-column>
-            <el-table-column prop="age" label="年龄" width="80"></el-table-column>
+            <el-table-column prop="age" label="年龄" width="80" sortable></el-table-column>
             <el-table-column prop="address" label="地址"></el-table-column>
         </el-table>
         
+        <h3>事件操作</h3>
         <hr />
-        <el-button @click="thiscustomEvents" :disabled="isUnBind">Custom Event</el-button>
-        <el-button @click="thiscustomEventsRef" :disabled="isUnBind">Custom Event Ref</el-button>
-        <el-button @click="thiscustomEventsUnbind">Unbind Events</el-button>
-        <el-button @click="thisDestroyCompoent">Destroy Component</el-button>
-
-        <hr />
-        <el-button @click="showmsg" :disabled="isDisabled">Show msg</el-button>
-        <el-button @click="globalPluginsSyHello">Global Plugins</el-button>
-
-        <hr />
+        <el-button @click="thiscustomEvents" :disabled="isUnBind">自定义事件</el-button>
+        <el-button @click="thiscustomEventsRef" :disabled="isUnBind">自定义事件 Ref</el-button>
+        <el-button @click="thiscustomEventsUnbind">解绑事件</el-button>
+        <el-button @click="thisDestroyCompoent">销毁组件</el-button>
+   
+        <el-button @click="showmsg" :disabled="isDisabled">显示消息</el-button>
+        <el-button @click="globalPluginsSyHello">全局插件调用</el-button>
+        
         <input v-focus:value="name" />
 
     </div>
@@ -42,12 +58,15 @@
 
 //import {mixinfun} from '../mixin'
 
+import pubsub from 'pubsub-js'
+
 export default {
     name : "Seudent",
     data() {
         return {
             name: "学生信息", 
             globalEventBusName : "",
+            dialogTableVisible : false,
             isDisabled: false,
             isUnBind: false,
             students: [
@@ -67,7 +86,8 @@ export default {
             this.$notify({
                 title: '成功',
                 message: '这是一条成功的提示消息',
-                type: 'success'
+                type: 'success',
+                position: 'bottom-right'
                 });
             this.$message({
                 title: '成功',
@@ -106,6 +126,18 @@ export default {
             // 销毁当前组件的实例后，其实例所有的自定义事件都将失效
             this.$destroy()
             this.$message('Student组件已销毁!')
+        },
+
+        // 消息订阅与发布(pubsub-js)
+        // 1. 先安装消息插件 npm i pubsub-js
+        // 2. 引入 pubsub 库 import pubsub from 'pubsub-js'
+        // 3. 接收方订阅消息 
+        //      mounted(){this.pubid = pubsub.subscribe('消息名称', 消息接收回调函数 function(){})}
+        //      pubsub.unsubscribe(this.pubid)
+        // 4. 发布消息 pubsub.publish('消息名称', 数据)
+        thisPublishMessage(){
+            this.dialogTableVisible = true
+            pubsub.publish('student', this.students)
         }
     },
     mounted(){
@@ -113,9 +145,21 @@ export default {
             this.globalEventBusName = data
             console.log('@globalEventBus', this, data)
         })
+
+        this.pubid = pubsub.subscribe('student', (name, data)=>{
+            console.log('@student.data',data)
+            let rid = (n, m)=>{
+                var num = Math.floor(Math.random() * (m - n + 1) + n)
+                return num
+            }
+            this.students.push(data[rid(0, data.length-1)])
+        })
+
     },
     beforeDestroy(){
         this.$bus.$off('globalEventBus')
+
+        pubsub.unsubscribe(this.pubid)
     }
 }
 

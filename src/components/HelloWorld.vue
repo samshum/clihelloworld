@@ -30,7 +30,8 @@ li {
 a {
   color: #42b983;
 }
-.hello h1{
+.hello{
+  text-align: center;
   background-color: aliceblue;
 }
 </style>

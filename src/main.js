@@ -19,7 +19,7 @@ Vue.mixin(mixinfun)
 import plugins from './plugins'
 Vue.use(plugins, "Main.js引入插件时定义时进行初始化传参1", "初始化传参2", "初始化传参3");
 
-// ElementUI 插件
+// ElementUI 插件, 需要先安装，具体看官方文档
 //import '../theme/index.css' // 引入自定义样式
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
@@ -34,7 +34,7 @@ new Vue({
   // 1. 解决平等组件点到点的通信，适用于任意组件之间的通讯
   // 2. 全局事件总线安装
   //    在Main.js入口把通过Vue的beforeCreate入口函数把$bus安装到Vue
-  // 3. 在需要接收的A组件中绑定自定义事件，提供回调函数
+  // 3. 在需要接收的A组件中绑定自定义事件，提供回调函数，并设置事件卸载方式
   //    mounted(){
   //        this.$bus.$on('globalEventBus', (data)=>{
   //          this.globalEventBusName = data

@@ -4,7 +4,10 @@
             <h2 @click.once="showMixinMethod">{{name}}</h2>
             <hr />
             <h3>学校/级别： {{schoolName}}/{{schoolLevel}} 地址： {{schoolAddress}}</h3>
-            <!-- <student></student> -->
+            <div class="showStudentCount" v-show="isShowStudents">
+                <h3>消息订阅:人数统计：{{studentCount}}</h3>
+                <!-- <student></student> -->
+            </div>
         </div>
 
         <el-collapse v-model="activeNames" accordion>
@@ -42,13 +45,17 @@
 // })
 
 import {mixinfun} from '../mixin'
+import pubsub from 'pubsub-js'
 
 export default {
     name:  "School",
     data(){
         return{
             name: "学校信息",
-            activeNames: ['1']
+            activeNames: ['1'],
+            studentCount: 0,
+            isShowStudents: false,
+            pubsubStudens: []
         }
     },
     // 简单声明,  开发过程中用得多
@@ -73,7 +80,15 @@ export default {
     components:{
         //student
     },
-    mixins: [mixinfun]
+    mixins: [mixinfun],
+    mounted(){
+        pubsub.subscribe('student', (name, data)=>{
+            console.log('@school name',name)
+            console.log('@school data',data)
+            this.studentCount = data.length
+            this.isShowStudents = true
+        })
+    }
 }
 
 </script>
@@ -82,5 +97,7 @@ export default {
     .school{
         background-color: gray;
     }
-
+    .showStudentCount{
+        background-color: aqua;
+    }
 </style>
