@@ -11,6 +11,7 @@
             //      mounted(){this.pubid = pubsub.subscribe('消息名称', 消息接收回调函数 function(){})} <br />
             //      pubsub.unsubscribe(this.pubid) <br />
             // 4. 发布消息 pubsub.publish('消息名称', 数据) <br />
+            // 5. Vue里面消息订阅实现机制与事件总线基本一致，日常开发过程中事件总线更常用些
         </el-dialog>
         <el-button slot="reference" @click="thisPublishMessage">发布消息('student')到School，同时推送学生对象到列表</el-button>
       
@@ -39,9 +40,13 @@
    
         <el-button @click="showmsg" :disabled="isDisabled">显示消息</el-button>
         <el-button @click="globalPluginsSyHello">全局插件调用</el-button>
-        
-        <input v-focus:value="name" />
 
+        <h3>设置Dom获取焦点</h3>
+        <p>
+            通过ref对指定Dom设置获取焦点! this.$refs.getInputFocus.focus()
+        </p>
+        <input v-focus:value="name" ref="getInputFocus" />
+        <el-button @click="setInputFocus" alt="">Focus</el-button>
     </div>
 </template>
 
@@ -135,9 +140,20 @@ export default {
         //      mounted(){this.pubid = pubsub.subscribe('消息名称', 消息接收回调函数 function(){})}
         //      pubsub.unsubscribe(this.pubid)
         // 4. 发布消息 pubsub.publish('消息名称', 数据)
+        // 5. Vue里面消息订阅实现机制与事件总线基本一致，日常开发过程中事件总线更常用些
         thisPublishMessage(){
             this.dialogTableVisible = true
             pubsub.publish('student', this.students)
+        },
+        setInputFocus(){
+            // 如果这里有个性数据的话，需要注意设置焦点需要在Vue重新加载完后再设置
+            // setTimeout(() => {
+            //     this.$refs.getInputFocus.focus()
+            // }, 200);
+            // 或者使用Vue的Api，$nextTick会在Vue下一次更新Dom以后再执行，建议使用这个
+            this.$nextTick(function(){
+                this.$refs.getInputFocus.focus()
+            })
         }
     },
     mounted(){
