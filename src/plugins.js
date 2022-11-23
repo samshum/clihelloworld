@@ -20,6 +20,7 @@ export default {
                 element.value = binding.value
             },
             inserted(element, binding){
+                console.log(binding)
                 element.focus()
             },
             update(element,binding){

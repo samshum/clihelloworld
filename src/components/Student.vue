@@ -13,7 +13,7 @@
             // 4. 发布消息 pubsub.publish('消息名称', 数据) <br />
             // 5. Vue里面消息订阅实现机制与事件总线基本一致，日常开发过程中事件总线更常用些
         </el-dialog>
-        <el-button slot="reference" @click="thisPublishMessage">发布消息('student')到School，同时推送学生对象到列表</el-button>
+        <el-button slot="reference" @click="thisPublishMessage">发布消息对象集到School组件，同时推送学生对象item到列表</el-button>
       
  
         <!-- <ul>
@@ -33,7 +33,7 @@
         
         <h3>事件操作</h3>
         <hr />
-        <el-button @click="thiscustomEvents" :disabled="isUnBind">自定义事件</el-button>
+        <el-button type="primary" @click="thiscustomEvents" :disabled="isUnBind">自定义事件</el-button>
         <el-button @click="thiscustomEventsRef" :disabled="isUnBind">自定义事件 Ref</el-button>
         <el-button @click="thiscustomEventsUnbind">解绑事件</el-button>
         <el-button @click="thisDestroyCompoent">销毁组件</el-button>
@@ -45,8 +45,12 @@
         <p>
             通过ref对指定Dom设置获取焦点! this.$refs.getInputFocus.focus()
         </p>
-        <input v-focus:value="name" ref="getInputFocus" />
-        <el-button @click="setInputFocus" alt="">Focus</el-button>
+        <el-input v-model="name" type="text" ref="getInputFocus" placeholder="全局插件自动获取焦点"></el-input>
+        <!-- <input v-focus:value="name" ref="getInputFocus" /> -->
+        <el-button @click="setInputFocus">全局插件设置焦点</el-button>
+        <el-button @click="setSaveToImage">Web save to image</el-button>
+        
+        <el-button type="primary" @click="pushStudentsToStore">将Studens放到$store中(Sum:{{this.$store.getters.sum}})</el-button>
     </div>
 </template>
 
@@ -64,6 +68,9 @@
 //import {mixinfun} from '../mixin'
 
 import pubsub from 'pubsub-js'
+
+// 将Dom页面内容保存成图片并下载
+import domtoimage from 'dom-to-image'
 
 export default {
     name : "Seudent",
@@ -101,6 +108,7 @@ export default {
                 type: 'success'
             });
             this.isDisabled = true
+            console.log(e)
         },
         thiscustomEvents(){
             // 调用子组件的自定义事件函数, 自定义事件在App中调用该子组件时指定
@@ -154,6 +162,35 @@ export default {
             this.$nextTick(function(){
                 this.$refs.getInputFocus.focus()
             })
+        },
+        setSaveToImage(){
+            // 将Web页面保存成图片并下载 https://github.com/tsayen/dom-to-image
+            // 1. 安装 npm install -g dom-go-image
+            // 2. 引入操作类 import domtoimage from 'dom-to-image'
+            // 3. 调用domtoimage将Dom元素转成SVG并下载到客户端
+            domtoimage.toPng(this.$root.$el, {quality: 1, bgcolor:'#fff' })
+                .then((dataUrl)=>{
+                    let fileName = 'webpagetoimage(' + this.DateFormat('yyyyMMddhhmmss') + ').png'
+                    //console.log(fileName)
+                    var link = document.createElement('a');
+                    link.download = fileName
+                    link.href = dataUrl;
+                    link.click();
+                })
+        },
+        pushStudentsToStore(){
+            let setStateResult = false
+            try{
+                this.$store.state.form.students = this.students
+                setStateResult = true
+                this.$notify.success({
+                    title: '数据推送成功',
+                    message: 'Students数据集已存入$store.state.form.students中',
+                    position: 'bottom-right'
+                    });
+            }finally{
+                pubsub.publish('store.state.form.students', setStateResult)
+            }
         }
     },
     mounted(){
@@ -164,6 +201,7 @@ export default {
 
         this.pubid = pubsub.subscribe('student', (name, data)=>{
             console.log('@student.data',data)
+            // 定义一个随机数
             let rid = (n, m)=>{
                 var num = Math.floor(Math.random() * (m - n + 1) + n)
                 return num
@@ -174,7 +212,6 @@ export default {
     },
     beforeDestroy(){
         this.$bus.$off('globalEventBus')
-
         pubsub.unsubscribe(this.pubid)
     }
 }
@@ -184,5 +221,9 @@ export default {
 <style scoped>
     .student{
         text-align: left;
+    }
+    .el-input {
+        width: 180px;
+        margin-right: 10px;
     }
 </style>
