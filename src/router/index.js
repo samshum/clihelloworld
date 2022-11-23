@@ -13,16 +13,44 @@ import About from '../pages/about'
 
 const router = new VueRouter({
     routes: [
-        // muenid 是自定义的数据，为子方便 el-menu 设置当前菜单激活项设置
-        { path: '/',                component: Home,    menuid: '0'},
-        { path: '/home',            component: Home,    menuid: '1'},
-        { path:'/business/news',    component: News,    menuid: '2',
+        // muenid 是自定义的数据，为子方便 el-menu 设置当前菜单激活项设置 meta: {keepAlive: true // 缓存}
+        {
+            path: '/', 
+            redirect: '/home'
+        },
+        { 
+            path: '/home',
+            component: Home, 
+            menuid: '1', 
+            meta: {
+                keepAlive: false,
+                auth:false,
+                title:"首页"
+            }
+        },
+        {
+            path:'/business/news',
+            component: News,
+            menuid: '2', 
+            meta: {
+                keepAlive: false,
+                auth:false,
+                title:"News/新闻发布"
+            },
 
             // 方式一：直接传键值对方式
             // props:{id:123123, title:'直接传键值对'}
             props:{id:0, title:'默认props传递数据方式'} },
 
-        { path:'/business/news/:id/:title', component: News, menuid: '3',
+        { 
+            path:'/business/news/:id/:title', 
+            component: News, 
+            menuid: '3', 
+            meta: {
+                keepAlive: false,
+                auth:false,
+                title:"News/新闻发布"
+            },
 
             // 方式二：传递 params 方式
             // 当有多项参数传递时，可以开启 props 支持方式，直接通过参数名称来获取参数
@@ -32,7 +60,15 @@ const router = new VueRouter({
             // 组件获取数据简写为 props:['id','title'] 就可以直接在页面调用 {{id}}、{{title}}
             props: true },
 
-        { path:'/business/message', component: Message, menuid: '4',
+        { 
+            path:'/business/message', 
+            component: Message, 
+            menuid: '4', 
+            meta: {
+                keepAlive: true,
+                auth:false,
+                title:"Message/消息通告"
+            },
 
             // 方式三：传递URL参数方式
             // 本质上跟第一种一样，直接在路由里获取参数，组件中用 props 即可接收
@@ -41,8 +77,24 @@ const router = new VueRouter({
                 return{ id, title }
             }
         },
-        { path: '/about',           component: About,   menuid: '5'},
-        { path: '*', component: NotFound }
+        { 
+            path: '/about',
+            component: About,
+            menuid: '5', 
+            meta: {
+                keepAlive: true,
+                auth:false,
+                title:"About/关于我们"
+            }
+        },
+        { 
+            path: '*', 
+            component: NotFound 
+        }
     ]
+})
+router.beforeEach((to, from, next)=>{
+    document.title = to.meta.title
+    next()
 })
 export default router

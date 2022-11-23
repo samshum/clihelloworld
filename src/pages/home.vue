@@ -53,7 +53,7 @@ export default {
     return {
       sn : "中山大学",
       sa : "广州大学城学院校区",
-      sl : 12,
+      sl : 12
     }
   },
   components: {
@@ -103,8 +103,14 @@ export default {
       });
     })
 
-    //setTimeout(() => { }, 3000);
-    //console.log('@app', this)
+  },
+  // 路由生命周期组件：页面展现时，刚好就是激活activeted事件时
+  activated(){
+
+  },
+  // 路由生命周期组件：页面切换时，deactivated就激活
+  deactivated(){
+
   }
 }
 </script>

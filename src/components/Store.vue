@@ -99,7 +99,10 @@ export default {
     methods: {
         activeEff(){
             this.isShowGetters = false
-            setTimeout(() => {
+            // 使用setTimeout记得在beforeDestroy执行 clearinterval(this.time)
+            // 如果使用路由，推荐放在deactived(){clearinterval(this.time)}中
+            // 如果使用了路由组件缓存 <keep-alive></keep-alive>会导致beforeDestroy没有执行，以至于this.time并没有清除
+            this.time = setTimeout(() => {
                 this.isShowGetters = true
             }, 10);
         },
@@ -139,6 +142,14 @@ export default {
     },
     beforeDestroy(){
         pubsub.unsubscribe(this.pubid)
+    },
+    // 路由生命周期组件：页面展现时，刚好就是激活activeted事件时
+    activated(){
+
+    },
+    // 路由生命周期组件：页面切换时，deactivated就激活
+    deactivated(){
+        clearInterval(this.time)
     }
 }
 </script>

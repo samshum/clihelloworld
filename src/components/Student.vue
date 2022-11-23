@@ -155,7 +155,10 @@ export default {
         },
         setInputFocus(){
             // 如果这里有个性数据的话，需要注意设置焦点需要在Vue重新加载完后再设置
-            // setTimeout(() => {
+            // 使用setTimeout记得在beforeDestroy执行 clearinterval(this.time)
+            // 如果使用路由，推荐放在deactived(){clearinterval(this.time)}中
+            // 如果使用了路由组件缓存 <keep-alive></keep-alive>会导致beforeDestroy没有执行，以至于this.time并没有清除
+            // this.time = setTimeout(() => {
             //     this.$refs.getInputFocus.focus()
             // }, 200);
             // 或者使用Vue的Api，$nextTick会在Vue下一次更新Dom以后再执行，建议使用这个

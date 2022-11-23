@@ -69,4 +69,4 @@ const vm = new Vue({
   }
 }).$mount('#app')
 
-console.log('@main', vm)
+//console.log('@main', vm)
