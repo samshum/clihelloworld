@@ -21,7 +21,7 @@
                 姓名： {{p.name}} / 年龄： {{p.age}}
             </li>
         </ul> -->
-        <h3 @click.once="showMixinMethod">{{globalEventBusName}} {{name}}</h3>
+        <h3 @click.once="showMixinMethod">{{globalEventBusName}} / {{name}}</h3>
         <hr />
         <el-table :data="students" style="width: 100%">
             <el-table-column label="SID" width="50" type="index"></el-table-column>

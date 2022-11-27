@@ -26,7 +26,12 @@ Vue.use(plugins, "Main.js引入插件时定义时进行初始化传参1", "初�
 // 这里完全装载，可以定制自定义加载
 //import '../theme/index.css' // 引入自定义样式
 import ElementUI from 'element-ui';
+import './theme/index.css'
 Vue.use(ElementUI);
+// 定制化组件, 需要先在babel.config.js中配置
+// import { Button, Table } from 'element-ui'
+// Vue.component(Button.name, Button)
+// Vue.component(Table.name, Table)
 
 // 自定义格式化日期处理插件
 import datePipe from './extends/datePipe'
@@ -35,7 +40,7 @@ Vue.use(datePipe)
 // 引入 Vuex, 并把它放入Vue初始化对象中使用, 如: new Vue({ store })
 import store from './stores'
 
-// Router
+// Router 
 // 引入组件
 import vueroute from 'vue-router'
 Vue.use(vueroute)
@@ -46,6 +51,7 @@ import App from './App.vue';
 Vue.config.productionTip = false;
 
 const vm = new Vue({
+  el: '#app',
   router: router || NoFound,
   store,
   render: h => h(App),
@@ -67,6 +73,7 @@ const vm = new Vue({
   beforeCreate(){
     Vue.prototype.$bus = this
   }
-}).$mount('#app')
+});
+//.$mount('#app')
 
 //console.log('@main', vm)

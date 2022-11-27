@@ -24,6 +24,14 @@
                 <el-menu-item index="3" route="/business/news/123/helloworld">News Detail</el-menu-item>
                 <el-menu-item index="4" route="/business/message?id=123&title=hiue">Message</el-menu-item>
             </el-submenu>
+            <el-submenu index="30">
+                <template slot="title">Javascript</template>
+                <el-menu-item index="6" route="/javascript/foreach/">ForEach</el-menu-item>
+                <el-menu-item index="7" route="/javascript/arraychange/">Change Array</el-menu-item>
+                <el-menu-item index="8" route="/javascript/arraynochange/">Not change Array</el-menu-item>
+                <el-menu-item index="9" route="/javascript/string/">Sting</el-menu-item>
+                <el-menu-item index="10" route="/javascript/object/">Object</el-menu-item>
+            </el-submenu>
             <el-menu-item index="5" route="/about">About</el-menu-item>
         </el-menu>
     </div>

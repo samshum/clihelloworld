@@ -11,6 +11,7 @@
         <router-view v-if="isKeepAlive"></router-view>
       </keep-alive>
       <router-view v-if="!isKeepAlive"></router-view>
+
     </div>
   </div>
 </template>
@@ -27,14 +28,6 @@ export default {
   },
   components: {
     Banner
-  },
-  // 路由生命周期组件：页面展现时，刚好就是激活activeted事件时
-  activated(){
-
-  },
-  // 路由生命周期组件：页面切换时，deactivated就激活
-  deactivated(){
-    
   }
 }
 </script>

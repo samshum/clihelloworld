@@ -2,31 +2,3 @@
 // 安装配置服务器信息 package.json
 //  {"scripts": {"start": "http-server -a 127.0.0.1 -p 5050"}}
 // 启动服务 npm start
-
-const { defineConfig } = require("@vue/cli-service")
-// module.exports = defineConfig({
-//   transpileDependencies: true,
-//   lintOnSave: false         // 关闭语法检查
-// })
-
-module.exports = {
-  pages:{
-    index:{
-      entry: "src/main.js"
-    }
-  },
-  lintOnSave: false,
-  devServer: {
-    proxy: {
-      "/api/": {
-        target: "http://127.0.0.1:5050",
-        ws: true,
-        changeOrigin: true
-      },
-      "/dns/": {
-        target: "https://c.isanto.vip/",
-        changeOrigin: true
-      }
-    }
-  }
-}
